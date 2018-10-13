@@ -33,26 +33,28 @@
 <![endif]-->
 
 <div ng-app="converterApp" class="main-container">
-    <div ng-controller="converterController" class="converter">
-        <form name="converterForm">
-            <label>FROM:</label>
-            <md-input-container>
-                <md-select ng-model="data.from" placeholder="Currency from" required>
-                    <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>
-                </md-select>
-            </md-input-container>
-            <label>TO:</label>
-            <md-input-container>
-                <md-select ng-model="data.to" placeholder="Currency to" required>
-                    <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>
-                </md-select>
-            </md-input-container>
+    <div ng-controller="wrapperController">
+        <div ng-controller="converterController" class="converter">
+            <form name="converterForm">
+                <label>FROM:</label>
+                <md-input-container>
+                    <md-select ng-model="data.from" placeholder="Currency from" required>
+                        <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>
+                    </md-select>
+                </md-input-container>
+                <label>TO:</label>
+                <md-input-container>
+                    <md-select ng-model="data.to" placeholder="Currency to" required>
+                        <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>
+                    </md-select>
+                </md-input-container>
 
-        </form>
-    </div>
-    <div ng-controller="graphController" class="graph">
-        {{name}}
-        <div id="cy"></div>
+            </form>
+        </div>
+        <div ng-controller="graphController" class="graph">
+            {{name}}
+            <div id="cy"></div>
+        </div>
     </div>
 </div>
 <script src="app.js"></script>
