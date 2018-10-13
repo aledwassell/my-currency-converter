@@ -23,6 +23,7 @@
     <script src="yarn_components/angular-animate/angular-animate.min.js"></script>
     <script src="yarn_components/angular-aria/angular-aria.min.js"></script>
     <script src="yarn_components/angular-messages/angular-messages.min.js"></script>
+    <script src="yarn_components/cytoscape/dist/cytoscape.js"></script>
 </head>
 <body>
 
@@ -34,20 +35,24 @@
 <div ng-app="converterApp" class="main-container">
     <div ng-controller="converterController" class="converter">
         <form name="converterForm">
+            <label>FROM:</label>
             <md-input-container>
-                <md-select ng-model="data.from" placeholder="Currency from">
+                <md-select ng-model="data.from" placeholder="Currency from" required>
                     <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>
                 </md-select>
             </md-input-container>
+            <label>TO:</label>
             <md-input-container>
-                <md-select ng-model="data.to" placeholder="Currency to">
+                <md-select ng-model="data.to" placeholder="Currency to" required>
                     <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>
                 </md-select>
             </md-input-container>
+
         </form>
     </div>
-    <div ng-controller="converterController" class="graph">
+    <div ng-controller="graphController" class="graph">
         {{name}}
+        <div id="cy"></div>
     </div>
 </div>
 <script src="app.js"></script>

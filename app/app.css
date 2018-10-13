@@ -10,10 +10,12 @@ body, html{
 .main-container{
   display: grid;
   grid-template-rows: 1fr 1fr;
+  grid-template-areas: "converter" "graph";
   height: 100vh;
 }
 .converter{
   display: flex;
+  grid-area: converter;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -21,7 +23,14 @@ body, html{
 }
 .graph{
   display: flex;
+  grid-area: graph;
+  height: 100%;
   justify-content: center;
   align-items: center;
   background-color: deepskyblue;
+}
+
+#cy {
+  width: 100%;
+  height: 100%;
 }
