@@ -1,43 +1,55 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html lang="en" ng-app="converterApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html lang="en" ng-app="converterApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html lang="en" ng-app="converterApp" class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html lang="en" ng-app="converterApp" class="no-js"> <!--<![endif]-->
+<!--[if lt IE 7]>
+<html lang="en" ng-app="converterApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html lang="en" ng-app="converterApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html lang="en" ng-app="converterApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html lang="en" ng-app="converterApp" class="no-js"> <!--<![endif]-->
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>My AngularJS App</title>
-  <meta name="description" content="">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="app.css">
-  <script src="yarn_components/angular/angular.js"></script>
-  <script src="yarn_components/angular-resource/angular-resource.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>My AngularJS App</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="yarn_components/tachyons/css/tachyons.css">
+    <link rel="stylesheet" href="yarn_components/angular-material/angular-material.min.css">
+    <script src="yarn_components/angular/angular.js"></script>
+    <script src="yarn_components/angular-resource/angular-resource.js"></script>
+    <script src="yarn_components/angular-material/angular-material.min.js"></script>
+    <script src="yarn_components/angular-animate/angular-animate.min.js"></script>
+    <script src="yarn_components/angular-aria/angular-aria.min.js"></script>
+    <script src="yarn_components/angular-messages/angular-messages.min.js"></script>
 </head>
 <body>
 
-  <!--[if lt IE 7]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-  <![endif]-->
+<!--[if lt IE 7]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
 
-  <div ng-app="converterApp" class="main-container">
+<div ng-app="converterApp" class="main-container">
     <div ng-controller="converterController" class="converter">
-      <form name="converterForm">
-        <label>convert from:</label><br>
-        <select name="from" ng-model="data.from">
-          <option value="" disabled>Select a country</option>
-          <option ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</option>
-        </select><br>
-        <label>convert to:</label><br>
-        <select name="to" ng-model="data.to">
-          <option value="" disabled>Select a country</option>
-          <option ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</option>
-        </select><br>
-      </form>
+        <form name="converterForm">
+            <md-input-container>
+                <md-select ng-model="data.from" placeholder="Currency from">
+                    <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container>
+                <md-select ng-model="data.to" placeholder="Currency to">
+                    <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>
+                </md-select>
+            </md-input-container>
+        </form>
     </div>
     <div ng-controller="converterController" class="graph">
-      {{name}}
+        {{name}}
     </div>
-  </div>
-  <script src="app.js"></script>
+</div>
+<script src="app.js"></script>
 </body>
 </html>

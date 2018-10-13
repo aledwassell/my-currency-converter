@@ -1,6 +1,6 @@
 (function(angular) {
     'use strict';
-    angular.module('converterApp', ['ngResource'])
+    angular.module('converterApp', ['ngResource', 'ngMaterial'])
         .factory('ProviderConverter', ($resource) => {
             let apiUrl = 'http://data.fixer.io/api/latest?access_key=bda7bc1e7ca07a47d64040442d614a09';
             return $resource(apiUrl, {

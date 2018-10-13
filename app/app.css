@@ -4,7 +4,7 @@ body, html{
 }
 
 *{
-  color: #ffffff;
+  font-family: 'Roboto', sans-serif;
 }
 
 .main-container{
@@ -14,6 +14,7 @@ body, html{
 }
 .converter{
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   background-color: pink;
