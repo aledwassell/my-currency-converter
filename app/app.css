@@ -1,5 +1,26 @@
+body, html{
+  margin: 0;
+  padding: 0;
+}
+
+*{
+  color: #ffffff;
+}
+
 .main-container{
   display: grid;
   grid-template-rows: 1fr 1fr;
   height: 100vh;
+}
+.converter{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: pink;
+}
+.graph{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: deepskyblue;
 }
