@@ -27,14 +27,13 @@
             //factory to provide historical data
             let url = `${__env.historicalApiUrl}?from=:from&to=:to&start_timestamp=:startDate&end_timestamp=:endDate&amount=:amount`;
             return $resource(url, {}, {
-                query: {
+                get: {
                     method: 'GET',
                     from: 'from',
                     to: 'to',
                     amount: 'amount',
                     startDate: 'startDate',
                     endDate: 'endDate',
-                    isArray: true,
                     headers:{
                         'authorization': __env.historicalApiKey
                     }
@@ -50,20 +49,8 @@
         })
         .service('apiConnectorService', ['ProviderConverter', 'ProviderSymbols', 'ProviderHistorical', function (ProviderConverter, ProviderSymbols, ProviderHistorical) {
             let symbols = [],//store symbols privately
+                currentQuery = {},
                 that = this;//store a reference to this function scope this variable
-            let observerCallbacks = [],
-                /*set up observer call backs, I think too many watchers in Angular can be quite heavy
-                * so I think setting up observable callbacks is useful*/
-                notifyAllObservers = function(){
-                    //when something changes notify all the callback that are subscribed to it
-                    angular.forEach(observerCallbacks, function(callback){
-                        callback();
-                    });
-                };
-            this.registerObserverCallback = function(callback){
-                //register subscribers so that they are notified of callbacks
-                observerCallbacks.push(callback);
-            };
             this.load_symbols = function () {
                 return new Promise(
                     function (resolve, reject) {
@@ -85,7 +72,7 @@
                         ProviderConverter.get({amount, from, to}, (data) => {
                             if(data){
                                 resolve(data);
-                                notifyAllObservers();
+                                currentQuery = data;
                             }
                         }, function (e) {
                             console.log(e);
@@ -97,7 +84,7 @@
             this.get_historical = function ({to, from, amount, startDate, endDate}) {
                 return new Promise(
                     function (resolve, reject) {
-                        ProviderHistorical.query({to, from, amount, startDate, endDate}, (data) => {
+                        ProviderHistorical.get({to, from, amount, startDate, endDate}, (data) => {
                             if(data){
                                 resolve(data);
                             }
@@ -108,9 +95,12 @@
                     }
                 )
             };
+            this.get_current_query = function () {
+                return currentQuery;
+            };
             this.get_symbols = function () {
                 return symbols;
-            }
+            };
         }])
         .controller('converterController', ['$scope', 'apiConnectorService', '$http', function ($scope, apiConnectorService, $http) {
             $scope.service = apiConnectorService;
@@ -131,9 +121,7 @@
                         from: $scope.data.from,
                         to: $scope.data.to
                     }).then(resp => {
-                        console.log(resp)
                         $scope.result = resp;
-                        console.log($scope.result)
                         $scope.$apply();
                 })
             }
@@ -141,17 +129,21 @@
         .controller('graphController', ['$scope', 'apiConnectorService', function ($scope, apiConnectorService) {
             let today = new Date(), thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - 30));
             $scope.service = apiConnectorService;
-            $scope.service.registerObserverCallback(() => {
-                $scope.service.get_historical({to: 'USD', from: 'JPY', amount: 200, startDate: thirtyDaysAgo.toISOString().substring(0, 10), endDate: today.toISOString().substring(0, 10)})
-                    .then(resp => {
+            $scope.$watchCollection('service.get_current_query()', function (n, o) {
+                console.log(n);
+                if(n.hasOwnProperty('timestamp')){
+                    $scope.service.get_historical({
+                        to: n.to[0].quotecurrency,
+                        from: n.from,
+                        amount: n.quotecurrency,
+                        startDate: thirtyDaysAgo.toISOString(),
+                        endDate: today.toISOString().substring(0,)
+                    }).then(resp => {
+                        console.log(resp);
                         $scope.build_graph(resp);
                     })
+                }
             });
-            $scope.service.get_historical({to: 'USD', from: 'JPY', amount: 200, startDate: thirtyDaysAgo.toISOString().substring(0, 10), endDate: today.toISOString().substring(0, 10)})
-                .then(resp => {
-                    console.log(resp);
-                    $scope.build_graph(resp);
-                });
             $scope.build_graph = function(data){
                 let dataElements = [];
                 let cy = cytoscape({
