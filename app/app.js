@@ -25,13 +25,19 @@
         })
         .factory('ProviderHistorical', ($resource) => {
             //factory to provide historical data
-            let url = `${__env.historicalApiUrl}GetHistoricalRatesRanges?${__env.historicalApiKey}&Symbols=EURUSD&PriceType=Mid&StartDate=:startDate&EndDate=:endDate&PeriodType=Daily&FixingTime=22:00`;
+            let url = `${__env.historicalApiUrl}?from=:from&to=:to&start_timestamp=:startDate&end_timestamp=:endDate&amount=:amount`;
             return $resource(url, {}, {
                 query: {
                     method: 'GET',
+                    from: 'from',
+                    to: 'to',
+                    amount: 'amount',
                     startDate: 'startDate',
                     endDate: 'endDate',
-                    isArray: true
+                    isArray: true,
+                    headers:{
+                        'authorization': __env.historicalApiKey
+                    }
                 },
             })
         })
@@ -88,10 +94,10 @@
                     }
                 )
             };
-            this.get_historical = function ({startDate, endDate}) {
+            this.get_historical = function ({to, from, amount, startDate, endDate}) {
                 return new Promise(
                     function (resolve, reject) {
-                        ProviderHistorical.query({startDate, endDate}, (data) => {
+                        ProviderHistorical.query({to, from, amount, startDate, endDate}, (data) => {
                             if(data){
                                 resolve(data);
                             }
@@ -133,44 +139,24 @@
             }
         }])
         .controller('graphController', ['$scope', 'apiConnectorService', function ($scope, apiConnectorService) {
+            let today = new Date(), thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - 30));
             $scope.service = apiConnectorService;
             $scope.service.registerObserverCallback(() => {
-                $scope.service.get_historical({startDate: '10/01/2018', endDate: '10/12/2018'})
+                $scope.service.get_historical({to: 'USD', from: 'JPY', amount: 200, startDate: thirtyDaysAgo.toISOString().substring(0, 10), endDate: today.toISOString().substring(0, 10)})
                     .then(resp => {
                         $scope.build_graph(resp);
                     })
             });
-            $scope.service.get_historical({startDate: '10/01/2018', endDate: '10/12/2018'})
+            $scope.service.get_historical({to: 'USD', from: 'JPY', amount: 200, startDate: thirtyDaysAgo.toISOString().substring(0, 10), endDate: today.toISOString().substring(0, 10)})
                 .then(resp => {
+                    console.log(resp);
                     $scope.build_graph(resp);
                 });
             $scope.build_graph = function(data){
                 let dataElements = [];
-                for (let i = 0; i < data.length; i++){
-                    dataElements.push(
-                        {
-                            group: 'nodes',
-                            classes: 'node',
-                            data: {
-                                id: 1,
-                                date: data[i].StartDate,
-                                value: data[i].Average
-                            },
-                            position: {
-                                x: 5,
-                                y: data[i].Average
-                            },
-                            selectable: false,
-                            grabbable: false
-                        },
-                    )
-                }
-                console.log(dataElements)
                 let cy = cytoscape({
                     container: document.getElementById('cy'),
-
                     boxSelectionEnabled: false,
-
                     style: cytoscape.stylesheet()
                         .selector('node')
                         .css({
@@ -192,18 +178,39 @@
                             'transition-property': 'background-color, line-color, target-arrow-color',
                             'transition-duration': '0.5s'
                         }),
-
                     elements: dataElements,
-
-
                     layout: {
                         name: 'preset',
-                        directed: true,
-                        roots: '#a',
-                        padding: 10
+                        fit: true
                     }
                 });
-            }
+                for (let i = 0; i < 31; i++){
+                    dataElements.push(
+                        {
+                            group: 'nodes',
+                            classes: 'node',
+                            data: {
+                                id: i,
+                                date: 'date',
+                                value: 'time'
+                            },
+                            position: {
+                                x: (cy.width() / 30) * i,
+                                y: Math.random() * (cy.height() - 1) + 1
+                            },
+                            selectable: false,
+                            grabbable: false
+                        }
+                    );
+                    if(i < 30) {
+                        dataElements.push(
+                            {data: { id: `${i}${i + 1}`, source: i, target: i + 1 }}
+                        );
+                    }
+                }
+                cy.add(dataElements);
+            };
+            $scope.build_graph();
         }])
         .run(['apiConnectorService', function (apiConnectorService) {
             //load currency symbols on application load
