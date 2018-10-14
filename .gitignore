@@ -2,7 +2,8 @@ logs/*
 !.gitkeep
 node_modules/
 yarn_components/
-config/
+env.js
+.env
 tmp
 .DS_Store
 .idea

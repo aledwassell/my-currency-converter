@@ -33,30 +33,72 @@
 <![endif]-->
 
 <div ng-app="converterApp" class="main-container">
-    <div ng-controller="wrapperController">
-        <div ng-controller="converterController" class="converter">
-            <form name="converterForm">
-                <label>FROM:</label>
+    <div ng-controller="converterController" class="converter">
+        <form name="converterForm">
+            <div>
                 <md-input-container>
-                    <md-select ng-model="data.from" placeholder="Currency from" required>
+                    <input type="text"
+                           name="amount"
+                           placeholder="Amount from"
+                           ng-model="data.amountFrom"
+                           required>
+                    <div ng-messages="converterForm.amount.$error">
+                        <div ng-message="required">This is required!</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>FROM:</label>
+                    <md-select ng-model="data.from"
+                               name="from"
+                               placeholder="Currency from"
+                               required>
+                        <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}
+                        </md-option>
+                    </md-select>
+                    <div ng-messages="converterForm.from.$error">
+                        <div ng-message="required">This is required!</div>
+                    </div>
+                </md-input-container>
+            </div>
+            <div>
+                <md-input-container>
+                    <input type="text"
+                           name="amount"
+                           placeholder="Amount to"
+                           ng-model="data.amountTo"
+                           required>
+                    <div ng-messages="converterForm.amount.$error">
+                        <div ng-message="required">This is required!</div>
+                    </div>
+                </md-input-container>
+                <md-input-container>
+                    <label>TO:</label>
+                    <md-select ng-model="data.to"
+                               name="to"
+                               placeholder="Currency to"
+                               required>
                         <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>
                     </md-select>
+                    <div ng-messages="converterForm.to.$error">
+                        <div ng-message="required">This is required!</div>
+                    </div>
                 </md-input-container>
-                <label>TO:</label>
-                <md-input-container>
-                    <md-select ng-model="data.to" placeholder="Currency to" required>
-                        <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>
-                    </md-select>
-                </md-input-container>
-
-            </form>
-        </div>
-        <div ng-controller="graphController" class="graph">
-            {{name}}
-            <div id="cy"></div>
-        </div>
+            </div>
+            <md-button class="md-primary md-raised"
+                       ng-click="handleConvert()">Convert</md-button>
+            <span ng-if="result">
+                <h3>{{result.amount}} {{result.from}} equals</h3>
+                <h1>{{result.to[0].mid}} {{result.to[0].quotecurrency}}</h1>
+                <p>At {{result.timestamp | date:'mediumTime'}} on {{result.timestamp | date:'fullDate'}}</p>
+            </span>
+        </form>
+    </div>
+    <div ng-controller="graphController" class="graph">
+        {{name}}
+        <div id="cy"></div>
     </div>
 </div>
+<script src="env.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
