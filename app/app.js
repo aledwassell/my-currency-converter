@@ -85,11 +85,11 @@
                 return new Promise(
                     function (resolve, reject) {
                         ProviderHistorical.get({to, from, amount, startDate, endDate}, (data) => {
+                            console.log(data);
                             if(data){
                                 resolve(data);
                             }
                         }, function (e) {
-                            console.log(e);
                             reject();
                         });
                     }
@@ -132,19 +132,20 @@
             $scope.$watchCollection('service.get_current_query()', function (n, o) {
                 console.log(n);
                 if(n.hasOwnProperty('timestamp')){
+                    console.log(n);
                     $scope.service.get_historical({
                         to: n.to[0].quotecurrency,
                         from: n.from,
-                        amount: n.quotecurrency,
+                        amount: n.amount,
                         startDate: thirtyDaysAgo.toISOString(),
                         endDate: today.toISOString().substring(0,)
                     }).then(resp => {
-                        console.log(resp);
                         $scope.build_graph(resp);
                     })
                 }
             });
             $scope.build_graph = function(data){
+                console.log(data);
                 let dataElements = [];
                 let cy = cytoscape({
                     container: document.getElementById('cy'),
@@ -152,7 +153,7 @@
                     style: cytoscape.stylesheet()
                         .selector('node')
                         .css({
-                            'content': 'data(id)',
+                            'content': 'data(value)',
                             'width': 10,
                             'height': 10
                         })
@@ -176,15 +177,15 @@
                         fit: true
                     }
                 });
-                for (let i = 0; i < 31; i++){
+                let key = Object.keys(data.to)[0];
+                for (let i = 0; i < data.to[key].length; i++){
                     dataElements.push(
                         {
                             group: 'nodes',
                             classes: 'node',
                             data: {
                                 id: i,
-                                date: 'date',
-                                value: 'time'
+                                value: Math.floor(data.to[key][i].mid) + ' ' + data.to[key][i].timestamp.substring(0,10)
                             },
                             position: {
                                 x: (cy.width() / 30) * i,
@@ -194,7 +195,7 @@
                             grabbable: false
                         }
                     );
-                    if(i < 30) {
+                    if(i < data.length) {
                         dataElements.push(
                             {data: { id: `${i}${i + 1}`, source: i, target: i + 1 }}
                         );
@@ -202,7 +203,6 @@
                 }
                 cy.add(dataElements);
             };
-            $scope.build_graph();
         }])
         .run(['apiConnectorService', function (apiConnectorService) {
             //load currency symbols on application load
