@@ -52,6 +52,7 @@
                 currentQuery = {},
                 that = this;//store a reference to this function scope this variable
             this.load_symbols = function () {
+                //load symbols on app run using new Promise and store them in the symbols array
                 return new Promise(
                     function (resolve, reject) {
                         ProviderSymbols.get({}, (data) => {
@@ -60,6 +61,7 @@
                             }
                             resolve(data);
                         }, function (e) {
+                            /*catch errors loading symbols*/
                             console.log(e);
                             reject();
                         });
@@ -67,6 +69,7 @@
                 )
             };
             this.convert = function ({amount, from, to}) {
+                //method used to convert currency passing th amount, from and to symbols
                 return new Promise(
                     function (resolve, reject) {
                         ProviderConverter.get({amount, from, to}, (data) => {
@@ -75,6 +78,9 @@
                                 currentQuery = data;
                             }
                         }, function (e) {
+                            /* if there is an error then log it, this function could emit to the rootscope where it could trigger a notification to the user that something went wrong
+                            this is outside the scope of my app, but if I would developer it further I add some notify function to catch errors.
+                            */
                             console.log(e);
                             reject();
                         });
@@ -90,11 +96,15 @@
                                 resolve(data);
                             }
                         }, function (e) {
+                            /* second location for error catching
+                            */
+                            console.log(e)
                             reject();
                         });
                     }
                 )
             };
+            //both getters are watched inside controllers for value changes
             this.get_current_query = function () {
                 return currentQuery;
             };
@@ -105,6 +115,7 @@
         .controller('converterController', ['$scope', 'apiConnectorService', '$http', function ($scope, apiConnectorService, $http) {
             $scope.service = apiConnectorService;
             $scope.$watchCollection('service.get_symbols()', function (n,o) {
+                //watch when symbols change
                 $scope.symbols = n;
             });
 
@@ -116,6 +127,7 @@
                 to: ''
             };
             $scope.handleConvert = function () {
+                //handle conversion of currency and wait for a result having passed the right
                 $scope.service.convert({
                         amount: $scope.data.amountFrom,
                         from: $scope.data.from,
@@ -130,9 +142,8 @@
             let today = new Date(), thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - 30));
             $scope.service = apiConnectorService;
             $scope.$watchCollection('service.get_current_query()', function (n, o) {
-                console.log(n);
+                //when the initial currency query has been made and is successful, look for historical data and populate the graph
                 if(n.hasOwnProperty('timestamp')){
-                    console.log(n);
                     $scope.service.get_historical({
                         to: n.to[0].quotecurrency,
                         from: n.from,
@@ -141,6 +152,7 @@
                         endDate: today.toISOString().substring(0,)
                     }).then(resp => {
                         $scope.build_graph(resp);
+                        //build the graph with the response from historical data call
                     })
                 }
             });
@@ -148,8 +160,10 @@
                 console.log(data);
                 let dataElements = [];
                 let cy = cytoscape({
-                    container: document.getElementById('cy'),
+                    //container: angular.element(document).find('cy'),
+                    container: document.getElementById('cy'),// I wasn't sure to use the AngularJS's jqLite here, I don't have jQuery installed
                     boxSelectionEnabled: false,
+                    // style the graph element  and nodes
                     style: cytoscape.stylesheet()
                         .selector('node')
                         .css({
@@ -173,11 +187,11 @@
                         }),
                     elements: dataElements,
                     layout: {
-                        name: 'preset',
+                        name: 'preset',// 'preset allows for presetting node coordinates
                         fit: true
                     }
                 });
-                let key = Object.keys(data.to)[0];
+                let key = Object.keys(data.to)[0];//find the only object key, that is the symbol related ot the 'TO' currency and loop over it's array
                 for (let i = 0; i < data.to[key].length; i++){
                     dataElements.push(
                         {
