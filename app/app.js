@@ -193,7 +193,7 @@
                 });
                 let key = Object.keys(data.to)[0];//find the only object key, that is the symbol related ot the 'TO' currency and loop over it's array
                 for (let i = 0; i < data.to[key].length; i++){
-                    dataElements.push(
+                    dataElements.push(//format all elements so that cytoscape can render them, and push into an array
                         {
                             group: 'nodes',
                             classes: 'node',
@@ -203,19 +203,24 @@
                             },
                             position: {
                                 x: (cy.width() / 30) * i,
-                                y: Math.random() * (cy.height() - 1) + 1
+                                /*
+                                I didn't get as far as representing the real data within the graph,
+                                but I would need to convert each day's data to a to a percentage of the height of the cytoscape canvas and plot it on the y axis.
+                                * */
+                                y: Math.random() * (cy.height() - 1) + 1//data.to[key][i].mid
                             },
                             selectable: false,
                             grabbable: false
                         }
                     );
                     if(i < data.length) {
+                        //check before the last node so that we don't push an edge that will have no target node
                         dataElements.push(
                             {data: { id: `${i}${i + 1}`, source: i, target: i + 1 }}
                         );
                     }
                 }
-                cy.add(dataElements);
+                cy.add(dataElements);//use the cytoscape cy.add method
             };
         }])
         .run(['apiConnectorService', function (apiConnectorService) {
