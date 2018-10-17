@@ -40,7 +40,7 @@
                     <input type="text"
                            name="amount"
                            placeholder="Amount from"
-                           ng-model="data.amountFrom"
+                           ng-model="data.amount"
                            required>
                     <div ng-messages="converterForm.amount.$error">
                         <div ng-message="required">This is required!</div>
@@ -54,7 +54,8 @@
                                name="from"
                                placeholder="Currency from"
                                required>
-                        <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}
+                        <!--<md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}-->
+                        <md-option ng-value="currency.iso" ng-repeat="currency in symbols">{{currency.iso}}: {{currency.currency_name}}
                         </md-option>
                     </md-select>
                     <div ng-messages="converterForm.from.$error">
@@ -67,7 +68,8 @@
                                name="to"
                                placeholder="Currency to"
                                required>
-                        <md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>
+                        <!--<md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}</md-option>-->
+                        <md-option ng-value="currency.iso" ng-repeat="currency in symbols">{{currency.iso}}: {{currency.currency_name}}
                     </md-select>
                     <div ng-messages="converterForm.to.$error">
                         <div ng-message="required">This is required!</div>

@@ -1,7 +1,7 @@
 (function (window) {
     window.__env = window.__env || {};
     // Here I am using the environment variable to keep my api key and api urls safe
-    window.__env.symbolsApiUrl = 'https://data.fixer.io/api/';
+    window.__env.symbolsApiUrl = 'http://data.fixer.io/api/';
     window.__env.apiKey = 'access_key=bda7bc1e7ca07a47d64040442d614a09';
     //
     window.__env.converterApiUrl = 'https://xecdapi.xe.com/v1/convert_from.json/';

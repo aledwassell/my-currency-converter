@@ -42,9 +42,15 @@
         })
         .factory('ProviderSymbols', ($resource) => {
             // factory to provide symbols on application load
-            let url =  `${__env.symbolsApiUrl}symbols?${__env.apiKey}`;
+            // let url =  `${__env.symbolsApiUrl}symbols?${__env.apiKey}`;
+            let url = `https://xecdapi.xe.com/v1/currencies.json/?obsolete=true`;
             return $resource(url, {}, {
-                get: {method: 'GET'},
+                get: {
+                    method: 'GET',
+                    headers:{
+                        'authorization': __env.historicalApiKey
+                    }
+                },
             })
         })
         .service('apiConnectorService', ['ProviderConverter', 'ProviderSymbols', 'ProviderHistorical', function (ProviderConverter, ProviderSymbols, ProviderHistorical) {
@@ -56,9 +62,7 @@
                 return new Promise(
                     function (resolve, reject) {
                         ProviderSymbols.get({}, (data) => {
-                            if(data.success){
-                                symbols = data.symbols;
-                            }
+                            symbols = data.currencies;
                             resolve(data);
                         }, function (e) {
                             /*catch errors loading symbols*/
@@ -121,15 +125,14 @@
 
             $scope.result = null;
             $scope.data = {
-                amountFrom: null,
-                amountTo: null,
+                amount: null,
                 from: '',
                 to: ''
             };
             $scope.handleConvert = function () {
                 //handle conversion of currency and wait for a result having passed the right
                 $scope.service.convert({
-                        amount: $scope.data.amountFrom,
+                        amount: $scope.data.amount,
                         from: $scope.data.from,
                         to: $scope.data.to
                     }).then(resp => {
