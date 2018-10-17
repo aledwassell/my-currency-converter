@@ -210,8 +210,8 @@
                                 I didn't get as far as representing the real data within the graph,
                                 but I would need to convert each day's data to a to a percentage of the height of the cytoscape canvas and plot it on the y axis.
                                 */
-//                                 y: Math.random() * (cy.height() - 1) + 1//  (data.to[key][i].mid / cy.height()) × 100
-                                y: (data.to[key][i].mid / cy.height()) × 100
+                                y: Math.random() * (cy.height() - 1) + 1//  (data.to[key][i].mid / cy.height()) × 100
+                                //y: (data.to[key][i].mid / cy.height()) × 100
                             },
                             selectable: false,
                             grabbable: false
