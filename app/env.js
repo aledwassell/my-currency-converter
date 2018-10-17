@@ -1,6 +1,8 @@
 (function (window) {
     window.__env = window.__env || {};
     // Here I am using the environment variable to keep my api key and api urls safe
+    window.__env.symbolsApi = `https://xecdapi.xe.com/v1/currencies.json/?obsolete=true`;
+
     window.__env.converterApiUrl = 'https://xecdapi.xe.com/v1/convert_from.json/';
     window.__env.converterApiKey = 'Basic d2Fzc2VsbGluZHVzdHJpZXM5MDkxMDE0MTE6NzJnajY0MDFibHFyY285c2t1YzhkMDNoaXM';
 

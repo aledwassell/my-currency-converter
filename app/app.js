@@ -43,7 +43,7 @@
         .factory('ProviderSymbols', ($resource) => {
             // factory to provide symbols on application load
             // let url =  `${__env.symbolsApiUrl}symbols?${__env.apiKey}`;
-            let url = `https://xecdapi.xe.com/v1/currencies.json/?obsolete=true`;
+            let url = __env.symbolsApi;
             return $resource(url, {}, {
                 get: {
                     method: 'GET',
