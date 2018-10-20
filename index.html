@@ -93,7 +93,7 @@
     </div>
     <div ng-controller="graphController" class="graph">
         {{name}}
-        <div id="cy"></div>
+        <div id="cy" ng-init="handleConvert()"></div>
     </div>
 </div>
 <script src="app/env.js"></script>

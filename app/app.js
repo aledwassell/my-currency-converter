@@ -130,9 +130,9 @@
             //     to: ''
             // };
             $scope.data = {
-                amount: 300,
-                from: 'JPY',
-                to: 'GBP'
+                amount: 30,
+                from: 'GBP',
+                to: 'JPY'
             };
             $scope.handleConvert = function () {
                 //handle conversion of currency and wait for a result having passed the right
@@ -145,6 +145,7 @@
                         $scope.$apply();
                 })
             }
+            $scope.$on('initialised', $scope.handleConvert());
         }])
         .controller('graphController', ['$scope', 'apiConnectorService', function ($scope, apiConnectorService) {
             let period = 30,
@@ -262,6 +263,7 @@
                     }
                 });
                 cy.center();
+                cy.fit();
             };
         }])
         .run(['apiConnectorService', function (apiConnectorService) {
