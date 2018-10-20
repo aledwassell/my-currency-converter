@@ -15,6 +15,7 @@
     "angular-resource@^1.7.5",
     "angular-route@~1.5.0",
     "angular@1.7.5",
+    "cytoscape-qtip@^2.7.1",
     "cytoscape@^3.2.17",
     "tachyons@^4.11.1"
   ],
@@ -28,9 +29,15 @@
     "angular-resource@^1.7.5": "https://registry.yarnpkg.com/angular-resource/-/angular-resource-1.7.5.tgz#80007af3aed8b6278bf2344e8e5257ea7bca333e",
     "angular-route@~1.5.0": "https://registry.yarnpkg.com/angular-route/-/angular-route-1.5.11.tgz#49614f3a167f54291e449fe8ba05d39c58924b83",
     "angular@1.7.5": "https://registry.yarnpkg.com/angular/-/angular-1.7.5.tgz#d1c1c01c6f5dc835638f3f9aa51012857bdac49e",
+    "cytoscape-qtip@^2.7.1": "https://registry.yarnpkg.com/cytoscape-qtip/-/cytoscape-qtip-2.7.1.tgz#8ed1f689c125d9d741a16e78a8355e4c224f14f2",
     "cytoscape@^3.2.17": "https://registry.yarnpkg.com/cytoscape/-/cytoscape-3.2.17.tgz#15bf90a81e0f71a4cada0ea2668c45f23915a9b7",
+    "ev-emitter@^1.0.0": "https://registry.yarnpkg.com/ev-emitter/-/ev-emitter-1.1.1.tgz#8f18b0ce5c76a5d18017f71c0a795c65b9138f2a",
     "heap@^0.2.6": "https://registry.yarnpkg.com/heap/-/heap-0.2.6.tgz#087e1f10b046932fc8594dd9e6d378afc9d1e5ac",
+    "imagesloaded@>=3.0.0": "https://registry.yarnpkg.com/imagesloaded/-/imagesloaded-4.1.4.tgz#1376efcd162bb768c34c3727ac89cc04051f3cc7",
+    "jquery@>=1.6.0": "https://registry.yarnpkg.com/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca",
+    "jquery@^2.0 || ^1.10.0": "https://registry.yarnpkg.com/jquery/-/jquery-2.2.4.tgz#2c89d6889b5eac522a7eea32c14521559c6cbf02",
     "lodash.debounce@^4.0.8": "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af",
+    "qtip2@^3.0 || ^2.2.0": "https://registry.yarnpkg.com/qtip2/-/qtip2-3.0.3.tgz#7df088ae4412c24a4064de69e824cb3cf76210dc",
     "tachyons@^4.11.1": "https://registry.yarnpkg.com/tachyons/-/tachyons-4.11.1.tgz#4e3666e7299e47aea7d820e0580dd4dc07cf3feb"
   },
   "files": [],

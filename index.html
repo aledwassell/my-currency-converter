@@ -17,13 +17,17 @@
     <link rel="stylesheet" href="app/app.css">
     <link rel="stylesheet" href="app/yarn_components/tachyons/css/tachyons.css">
     <link rel="stylesheet" href="app/yarn_components/angular-material/angular-material.min.css">
+    <link rel="stylesheet" href="app/yarn_components/qtip2/dist/jquery.qtip.css">
     <script src="app/yarn_components/angular/angular.js"></script>
+    <script src="app/yarn_components/jquery/dist/jquery.min.js"></script>
+    <script src="app/yarn_components/qtip2/dist/jquery.qtip.js"></script>
     <script src="app/yarn_components/angular-resource/angular-resource.js"></script>
     <script src="app/yarn_components/angular-material/angular-material.min.js"></script>
     <script src="app/yarn_components/angular-animate/angular-animate.min.js"></script>
     <script src="app/yarn_components/angular-aria/angular-aria.min.js"></script>
     <script src="app/yarn_components/angular-messages/angular-messages.min.js"></script>
     <script src="app/yarn_components/cytoscape/dist/cytoscape.js"></script>
+    <script src="app/yarn_components/cytoscape-qtip/cytoscape-qtip.js"></script>
 </head>
 <body>
 
@@ -41,6 +45,7 @@
                            name="amount"
                            placeholder="Amount from"
                            ng-model="data.amount"
+                           ng-change="handleConvert()"
                            required>
                     <div ng-messages="converterForm.amount.$error">
                         <div ng-message="required">This is required!</div>
@@ -52,6 +57,7 @@
                     <label>FROM:</label>
                     <md-select ng-model="data.from"
                                name="from"
+                               ng-change="handleConvert()"
                                placeholder="Currency from"
                                required>
                         <!--<md-option ng-value="key" ng-repeat="(key, value) in symbols" value="{{key}}">{{key}}: {{value}}-->
@@ -65,6 +71,7 @@
                 <md-input-container>
                     <label>TO:</label>
                     <md-select ng-model="data.to"
+                               ng-change="handleConvert()"
                                name="to"
                                placeholder="Currency to"
                                required>
@@ -76,9 +83,8 @@
                     </div>
                 </md-input-container>
             </div>
-            <md-button class="md-primary md-raised"
-                       ng-click="handleConvert()">Convert</md-button>
-            <span ng-if="result">
+            <!--<md-button class="md-primary md-raised" ng-click="handleConvert()">Convert</md-button>-->
+            <span ng-if="result" class="result">
                 <h3>{{result.amount}} {{result.from}} equals</h3>
                 <h1>{{result.to[0].mid}} {{result.to[0].quotecurrency}}</h1>
                 <p>At {{result.timestamp | date:'mediumTime'}} on {{result.timestamp | date:'fullDate'}}</p>

@@ -124,10 +124,15 @@
             });
 
             $scope.result = null;
+            // $scope.data = {
+            //     amount: null,
+            //     from: '',
+            //     to: ''
+            // };
             $scope.data = {
-                amount: null,
-                from: '',
-                to: ''
+                amount: 300,
+                from: 'JPY',
+                to: 'GBP'
             };
             $scope.handleConvert = function () {
                 //handle conversion of currency and wait for a result having passed the right
@@ -142,7 +147,8 @@
             }
         }])
         .controller('graphController', ['$scope', 'apiConnectorService', function ($scope, apiConnectorService) {
-            let today = new Date(), thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - 30));
+            let period = 30,
+                today = new Date(), thirtyDaysAgo = new Date(new Date().setDate(new Date().getDate() - period));
             $scope.service = apiConnectorService;
             $scope.$watchCollection('service.get_current_query()', function (n, o) {
                 //when the initial currency query has been made and is successful, look for historical data and populate the graph
@@ -167,10 +173,13 @@
                     container: document.getElementById('cy'),// I wasn't sure to use the AngularJS's jqLite here, I don't have jQuery installed
                     boxSelectionEnabled: false,
                     // style the graph element  and nodes
+                    d: 'test',
                     style: cytoscape.stylesheet()
                         .selector('node')
                         .css({
-                            'content': 'data(value)',
+                            // 'content': 'data(value)',
+                            'color': '#eeeeee',
+                            'background-color': '#ffffff',
                             'width': 10,
                             'height': 10
                         })
@@ -178,13 +187,12 @@
                         .css({
                             'curve-style': 'bezier',
                             'width': 2,
-                            'line-color': '#ddd'
+                            'line-color': '#ffffff'
                         })
                         .selector('.highlighted')
                         .css({
                             'background-color': '#61bffc',
-                            'line-color': '#61bffc',
-                            'target-arrow-color': '#61bffc',
+                            'line-color': '#ffffff',
                             'transition-property': 'background-color, line-color, target-arrow-color',
                             'transition-duration': '0.5s'
                         }),
@@ -195,6 +203,10 @@
                     }
                 });
                 let key = Object.keys(data.to)[0];//find the only object key, that is the symbol related ot the 'TO' currency and loop over it's array
+                let getTopBottom = (arr) => {
+                    let s = arr.concat().sort((a, b) => a - b);
+                    return {t: s.slice(s.length - 1), b: s.slice(0, 1)}
+                };
                 for (let i = 0; i < data.to[key].length; i++){
                     dataElements.push(//format all elements so that cytoscape can render them, and push into an array
                         {
@@ -202,22 +214,23 @@
                             classes: 'node',
                             data: {
                                 id: i,
-                                value: Math.floor(data.to[key][i].mid) + ' ' + data.to[key][i].timestamp.substring(0,10)
+                                value: Math.floor(data.to[key][i].mid),
+                                date: data.to[key][i].timestamp.substring(0,10)
                             },
                             position: {
-                                x: (cy.width() / 30) * i,
+                                x: (cy.width() / period) * i,
                                 /*
                                 I didn't get as far as representing the real data within the graph,
                                 but I would need to convert each day's data to a to a percentage of the height of the cytoscape canvas and plot it on the y axis.
                                 */
-                                y: Math.random() * (cy.height() - 1) + 1//  (data.to[key][i].mid / cy.height()) × 100
-                                //y: (data.to[key][i].mid / cy.height()) × 100
+                                //y: Math.random() * (cy.height() - 1) + 1//  (data.to[key][i].mid / cy.height()) × 100
+                                y: data.to[key][i].mid
                             },
                             selectable: false,
                             grabbable: false
                         }
                     );
-                    if(i < data.length) {
+                    if(i < data.to[key].length) {
                         //check before the last node so that we don't push an edge that will have no target node
                         dataElements.push(
                             {data: { id: `${i}${i + 1}`, source: i, target: i + 1 }}
@@ -225,6 +238,30 @@
                     }
                 }
                 cy.add(dataElements);//use the cytoscape cy.add method
+                cy.elements().qtip({
+                    content: function(){
+                        console.log();
+                        return  `${key}: ${this._private.data.value} date: ${this._private.data.date}`
+                    },
+                    position: {
+                        my: 'top center',
+                        at: 'bottom center'
+                    },
+                    show:{
+                        event: 'mouseover'
+                    },
+                    hide:{
+                        event: 'mouseout'
+                    },
+                    style: {
+                        classes: 'qtip-bootstrap',
+                        tip: {
+                            width: 16,
+                            height: 8
+                        }
+                    }
+                });
+                cy.center();
             };
         }])
         .run(['apiConnectorService', function (apiConnectorService) {
